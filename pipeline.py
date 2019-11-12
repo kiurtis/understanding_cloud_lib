@@ -39,7 +39,7 @@ label_names = ['Fish','Flower','Gravel','Sugar']
 
 def custom_image_generator(bs, labels, path_to_data, predicted_class,mode="train", 
                            aug=None, input_height=input_height, input_width=input_width,
-                           prefix=''):
+                           prefix='',label_filtering=True):
     
     assert predicted_class in label_names
     folder_path = path_to_data
@@ -49,8 +49,10 @@ def custom_image_generator(bs, labels, path_to_data, predicted_class,mode="train
         df = labels.copy()
         
         df = df.loc[df['Image_Label'].str.endswith(predicted_class)]
-        # We only use images where there is the label of interest to have a balanced dataset
-        df = df.loc[df['EncodedPixels'].notnull()]
+        
+        if label_filtering: # We only use images where there is the label of interest to have a balanced dataset
+            df = df.loc[df['EncodedPixels'].notnull()]
+    
     elif mode == "test":
         dataframe_name = "sample_submission.csv"
     
